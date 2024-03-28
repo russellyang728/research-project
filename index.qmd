@@ -1,6 +1,6 @@
 ---
-title: "Title of your work"
-author: "Your Name"
+title: "The Effects of Fiscal Policy Shifts on Unemployment Rates"
+author: "Yansong Yang"
 
 execute:
   echo: false
