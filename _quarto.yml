@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "Macroeconometrics Research Report"
+  title: "The Effects of Fiscal Policy Shifts on Unemployment Rates"
   navbar:
     background: "light"
 
