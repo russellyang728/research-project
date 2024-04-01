@@ -14,7 +14,7 @@ bibliography: references.bib
 
 # Introduction
 
-This is a template repository for the Research Report for **Macroeconometrics**. Learn more about about developing online reports with **quarto** at [quarto.org](https://quarto.org/).
+
 
 
 
