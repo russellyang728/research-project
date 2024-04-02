@@ -1,0 +1,128 @@
+---
+title: "The Effects of Fiscal Policy Shifts on Unemployment Rates"
+author: "Yansong Yang"
+format: pdf
+editor: visual
+---
+
+# 1.	The Question Objective, and Motivation
+
+The objective of this research project is to assess the effects of fiscal policy shifts on unemployment rates. I aim to investigate how unemployment rates respond to changes in government spending and taxation under various fiscal policy frameworks.
+
+Unemployment is pivotal in the macroeconomic framework, directly tied to social welfare and economic performance. Considering the economic challenges faced by Australia, the examination of fiscal policy's influence on unemployment is timely. For instance, Leigh (2012) found that fiscal consolidation efforts in Australia could potentially lift unemployment rates in the short term. Chapman and Kapuscinski (2000) identified that the Australian labor market exhibits notable sensitivity to macroeconomic policy shifts, with fiscal measures playing a significant role in shaping employment trends. These findings drive me curious about understanding fiscal policy mechanisms in the Australian labor market. By conducting this research, I aim to provide an updated empirical analysis of how contemporary fiscal policy adjustments are impacting unemployment rates in Australia, thereby offering insights that may inform policy refinement for enhanced economic resilience and labor stability.
+
+# 2.	Data and Their Properties
+
+## 2.1 Variables Selected
+
+Unemployment Rate (UNEMP): Monthly or quarterly data on the unemployment rate in Australia, sourced from the Australian Bureau of Statistics (ABS).
+
+Government Spending (GOVSPEND): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS or the Reserve Bank of Australia.
+
+Tax Revenue (TAXREV): Quarterly tax revenue data for the Australian government, which can be sourced from ABS or public finance reports from the Treasury.
+
+Inflation Rate (INFL): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.
+
+## 2.2 Why Chose Them?
+
+The chosen variables are integral to capturing the broad dynamics of fiscal policy and its impact on the labor market. The unemployment rate (UNEMP) is the direct indicator of labor market health. Government spending (GOVSPEND) and tax revenue (TAXREV) are key fiscal policy tools that directly affect aggregate demand, and by extension, employment and output. Inflation rate (INFL) is a crucial economic indicator that can reflect the demand-pull effects in the economy which, in a Keynesian context, may affect the level of employment.
+
+## 2.3 Data Visualization
+
+```{r include=FALSE}
+
+library(readabs)
+library(xts)
+library(ggplot2)
+
+#download data
+
+unemp_dwnld <- readabs::read_abs(series_id = 'A85255725J')
+unemp <- xts(unemp_dwnld$value, order.by=as.Date(unemp_dwnld$date))
+unemp <- to.quarterly(unemp,OHLC = FALSE)
+
+unemp_p = autoplot(unemp) +
+  theme_classic()+
+  scale_x_yearqtr(format = "%Y")+
+  labs(title = "Unemployment Rate")+
+  theme(axis.title.x = element_blank(),
+        plot.title = element_text(hjust = 0.5,
+                                  face = "bold"))
+
+start_date <- start(unemp)
+end_date <- end(unemp)
+
+govspend_dwnld <- readabs::read_abs(series_id = 'A2304080V')
+govspend <- xts(govspend_dwnld$value, order.by=as.Date(govspend_dwnld$date))
+govspend <- window(govspend, start=start_date, end=end_date)
+
+govspend_p = autoplot(govspend) +
+  theme_classic()+
+  labs(title = "Government Spending")+
+  theme(axis.title.x = element_blank(),
+        plot.title = element_text(hjust = 0.5,
+                                  face = "bold"))
+
+
+taxrev_dwnld <- readabs::read_abs(series_id = 'A2302794K')
+taxrev <- xts(taxrev_dwnld$value, order.by=as.Date(taxrev_dwnld$date))
+taxrev <- window(taxrev, start=start_date, end=end_date)
+
+taxrev_p = autoplot(taxrev) +
+  theme_classic()+
+  labs(title = "Tax Revenue")+
+  theme(axis.title.x = element_blank(),
+        plot.title = element_text(hjust = 0.5,
+                                  face = "bold"))
+
+infl_dwnld <- readabs::read_abs(series_id = 'A2325850V')
+infl <- xts(infl_dwnld$value, order.by=as.Date(infl_dwnld$date))
+infl <- window(infl, start=start_date, end=end_date)
+
+infl_p = autoplot(infl) +
+  theme_classic()+
+  labs(title = "Inflation")+
+  theme(axis.title.x = element_blank(),
+        plot.title = element_text(hjust = 0.5,
+                                  face = "bold"))
+
+```
+
+
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| layout-nrow: 2
+#| fig-cap: "Time Series Data"
+
+unemp_p
+govspend_p
+taxrev_p
+infl_p
+```
+
+## 2.4 Property Tested
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "ACF & PACF"
+
+par(mfrow=c(2, 2))
+
+acf(coredata(unemp), main="ACF for Unemployment Rate")
+acf(coredata(govspend), main="ACF for Government Spending")
+acf(coredata(taxrev), main="ACF for Tax Revenue")
+acf(coredata(infl), main="ACF for Inflation Rate")
+
+pacf(coredata(unemp), main="PACF for Unemployment Rate")
+pacf(coredata(govspend), main="PACF for Government Spending")
+pacf(coredata(taxrev), main="PACF for Tax Revenue")
+pacf(coredata(infl), main="PACF for Inflation Rate")
+
+par(mfrow=c(1, 1))
+
+```
+
